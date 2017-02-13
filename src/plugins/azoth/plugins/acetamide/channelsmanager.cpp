@@ -142,14 +142,19 @@ namespace Acetamide
 	void ChannelsManager::CloseAllChannels () const
 	{
 		Util::Map (ChannelHandlers_,
-				[] (const ChannelHandler_ptr& ich) { ich->CloseChannel (); });
+				[] (const ChannelHandler_ptr& ich) { if (ich) { ich->CloseChannel (); } });
 	}
 
 	void ChannelsManager::UnregisterChannel (ChannelHandler *ich)
 	{
+		if (!ich)
+		{
+			qWarning () << Q_FUNC_INFO << "Invalid ChannelHandler object";
+			return;
+		}
+		
 		ChannelHandlers_.remove (ich->GetChannelOptions ().ChannelName_);
-
-		if (!ChannelHandlers_.count () &&
+		if (ISH_ && !ChannelHandlers_.count () &&
 				XmlSettingsManager::Instance ()
 						.property ("AutoDisconnectFromServer").toBool ())
 			ISH_->DisconnectFromServer ();
@@ -534,7 +539,10 @@ namespace Acetamide
 
 	void ChannelsManager::CreateServerParticipantEntry (QString nick)
 	{
-		ISH_->CreateServerParticipantEntry (nick);
+		if (ISH_)
+		{
+			ISH_->CreateServerParticipantEntry (nick);
+		}
 	}
 
 	void ChannelsManager::UpdateEntry (const WhoMessage& message)

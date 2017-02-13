@@ -66,7 +66,11 @@ namespace Acetamide
 
 	void IrcServerSocket::DisconnectFromHost ()
 	{
-		Socket_ptr->disconnectFromHost ();
+		QTcpSocket *socket = GetSocketPtr ();
+		if (socket)
+		{
+			socket->disconnectFromHost ();
+		}
 	}
 
 	void IrcServerSocket::Send (const QString& message)

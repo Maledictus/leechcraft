@@ -947,16 +947,33 @@ namespace Acetamide
 
 	void IrcServerHandler::DisconnectFromServer ()
 	{
+		if (!Account_)
+		{
+			qWarning () << Q_FUNC_INFO << "Invalid account";
+			return;
+		}
+		
+		if (!ChannelsManager_)
+		{
+			qWarning () << Q_FUNC_INFO << "Invalid channels manager";
+			return;
+		}
+
 		Account_->ChangeState (EntryStatus (SOffline, QString ()));
+		
 		ChannelsManager_->CloseAllChannels ();
 
 		for (const auto entry : Nick2Entry_)
+		{
 			Account_->handleEntryRemoved (entry.get ());
+		}
 
 		Nick2Entry_.clear ();
 
-		if (ServerConnectionState_ != NotConnected)
+		if (Socket_ && ServerConnectionState_ != NotConnected)
+		{
 			Socket_->DisconnectFromHost ();
+		}
 	}
 
 	void IrcServerHandler::SendCommand (const QString& cmd)
