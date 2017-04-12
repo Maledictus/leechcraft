@@ -108,6 +108,7 @@ option (ENABLE_MONOCLE_MU "Enable PDF backend for Monocle using the mupdf librar
 option (ENABLE_MONOCLE_PDF "Enable PDF backend for Monocle using the Poppler library" ON)
 option (ENABLE_MONOCLE_POSTRUS "Enable PostScript backend for Monocle using the libspectre library" ON)
 option (ENABLE_MONOCLE_SEEN "Enable DjVu backend for Monocle using the DjVu library" ON)
+option (ENABLE_MONOCLE_EPUB "Enable EPUB backend for Monocle" ON)
 
 if (ENABLE_MONOCLE_DIK)
 	add_subdirectory (plugins/dik)
@@ -132,3 +133,8 @@ endif ()
 if (ENABLE_MONOCLE_SEEN)
 	add_subdirectory (plugins/seen)
 endif ()
+
+if (ENABLE_MONOCLE_EPUB)
+	add_subdirectory (plugins/epub)
+endif ()
+
